@@ -1,0 +1,13 @@
+<h2>{{ lesson.name }}</h2>
+<p><strong>Date:</strong> {{ lesson.date|date:"d.m.Y" }}</p>
+<p><strong>Description:</strong> {{ lesson.description }}</p>
+<p><strong>Homework:</strong> {{ lesson.homework }}</p>
+<p><strong>Room:</strong> {{ lesson.room }}</p>
+
+{% if grade %}
+  <p><strong>Your Grade:</strong> {{ grade.grade }}</p>
+{% else %}
+  <p>Grade has not been assigned yet.</p>
+{% endif %}
+
+<a href="{% url 'student:student_dashboard' %}">← Back</a>

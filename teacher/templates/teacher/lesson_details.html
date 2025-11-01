@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body class="p-4">
+
+<div class="container">
+    <h1>Lesson: {{ lesson.title }}</h1>
+    <p><strong>Date:</strong> {{ lesson.date }}</p>
+    <p><strong>Description:</strong> {{ lesson.description }}</p>
+    <p><strong>Class:</strong> {{ lesson.student_class.name }}</p>
+
+    <hr>
+
+    <h3>Students in class</h3>
+    <ul class="list-group">
+        {% for student in students %}
+            <li class="list-group-item">
+                {{ student.first_name }} {{ student.last_name }}
+            </li>
+        {% empty %}
+            <li class="list-group-item">No students in this class.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h3>Grades</h3>
+    <ul class="list-group">
+        {% for grade in grades %}
+            <li class="list-group-item">
+                {{ grade.student.first_name }} {{ grade.student.last_name }}: {{ grade.score }}
+            </li>
+        {% empty %}
+            <li class="list-group-item">No grades assigned yet.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+
+    <a href="{% url 'teacher:set_grade' lesson.id %}" class="btn btn-primary mt-3">Set Grade</a>
+</div>
+
+</body>
+</html>

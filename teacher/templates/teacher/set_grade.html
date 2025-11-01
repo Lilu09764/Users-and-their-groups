@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Set Grade{% endblock %}
+
+{% block content %}
+<h2>Set Grade for {{ lesson.title }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Set Grade</button>
+</form>
+{% endblock %}

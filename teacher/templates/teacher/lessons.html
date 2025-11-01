@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Lessons{% endblock %}
+
+{% block content %}
+<h1>Your Lessons</h1>
+
+{% for lesson in all_lessons %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5>{{ lesson.title }}</h5>
+        <p><strong>Date:</strong> {{ lesson.date }} | <strong>Class:</strong> {{ lesson.student_class.name }}</p>
+        <p>{{ lesson.description|truncatewords:20 }}</p>
+        <a href="{% url 'teacher:lesson_details' lesson.id %}" class="btn btn-sm btn-outline-primary">View</a>
+        <a href="{% url 'teacher:set_grade' lesson.id %}" class="btn btn-sm btn-outline-warning">Set Grade</a>
+    </div>
+</div>
+{% empty %}
+<p>No lessons yet.</p>
+{% endfor %}
+
+{% endblock %}

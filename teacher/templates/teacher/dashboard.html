@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>My Lessons</h1>
+
+
+    <a href="{% url 'teacher:create_lesson' %}" class="btn btn-primary mb-3">+ Create Lesson</a>
+
+    {% if lessons %}
+        <div class="list-group">
+            {% for lesson in lessons %}
+                <div class="list-group-item">
+                    <h5>{{ lesson.title }} ({{ lesson.school_class.name }})</h5>
+                    <p><strong>Date:</strong> {{ lesson.date }}</p>
+                    <p><strong>Subject:</strong> {{ lesson.subject }}</p>
+                    <a href="{% url 'teacher:lesson_details' lesson.id %}" class="btn btn-info btn-sm">View Details</a>
+                    <a href="{% url 'teacher:set_grade' lesson.id %}" class="btn btn-success btn-sm">Set Grade</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No lessons yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
