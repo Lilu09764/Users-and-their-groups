@@ -1,0 +1,21 @@
+# Virtual Environment
+venv/
+.env
+
+# Database
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.idea/
+.DS_Store
+
+# Static and Media (если не хочешь их хранить)
+staticfiles/
+media/
+
+# Logs
+*.log
