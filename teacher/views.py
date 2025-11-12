@@ -1,14 +1,16 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from .forms import LessonForm, GradeForm  # GradeForm остаётся в teacher/forms.py
-from common_data.models import Lesson, Student, UserProfile, Grade  # ← ИМПОРТ ИЗ common_data
+from .forms import LessonForm, GradeForm
+from common_data.models import Lesson, Student, UserProfile, Grade
+
 
 @login_required(login_url='/accounts/login/')
 def teacher_dashboard(request):
     teacher_profile, created = UserProfile.objects.get_or_create(user=request.user)
     lessons = Lesson.objects.filter(teacher=teacher_profile)
     return render(request, 'teacher/dashboard.html', {'lessons': lessons})
+
 
 @login_required(login_url='/accounts/login/')
 def create_lesson(request):
@@ -30,13 +32,23 @@ def create_lesson(request):
 @login_required(login_url='/accounts/login/')
 def lesson_details(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
-    students_in_class = Student.objects.filter(school_class=lesson.school_class)
+
+
+    if lesson.school_class:
+        students_in_context = Student.objects.filter(school_class=lesson.school_class)
+    elif lesson.study_group:
+        students_in_context = lesson.study_group.students.all()
+    else:
+        students_in_context = Student.objects.none()
+
     grades = Grade.objects.filter(lesson=lesson)
+
     return render(request, "teacher/lesson_details.html", {
         "lesson": lesson,
-        "students": students_in_class,
+        "students": students_in_context,
         "grades": grades
     })
+
 
 @login_required(login_url='/accounts/login/')
 def set_grade(request, lesson_id):
@@ -56,7 +68,6 @@ def set_grade(request, lesson_id):
         "lesson": lesson,
         "form": form
     })
-
 
 
 @login_required

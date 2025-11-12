@@ -1,11 +1,22 @@
+<!-- student/templates/student/my_grades.html -->
 <h2>My Grades</h2>
 {% if grades %}
-  <ul>
+  <ul class="list-group">
     {% for g in grades %}
-      <li>{{ g.lesson.name }}: {{ g.grade }}</li>
+      <li class="list-group-item">
+        <strong>{{ g.lesson.subject }}</strong>
+        {% if g.lesson.school_class %}
+          (Class: {{ g.lesson.school_class.name }})
+        {% elif g.lesson.study_group %}
+          (Group: {{ g.lesson.study_group.name }})
+        {% endif %}
+        — <strong>{{ g.score }}</strong>
+        <small>{{ g.date|date:"d.m.Y" }}</small>
+      </li>
     {% endfor %}
   </ul>
 {% else %}
   <p>No grades available yet.</p>
 {% endif %}
-<a href="{% url 'student:student_dashboard' %}">Back to Lessons</a>
+
+<a href="{% url 'student:student_dashboard' %}" class="btn btn-primary mt-3">← Back to Dashboard</a>

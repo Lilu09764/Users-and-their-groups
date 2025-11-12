@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,18 +12,28 @@
     <h1>Lesson: {{ lesson.title }}</h1>
     <p><strong>Date:</strong> {{ lesson.date }}</p>
     <p><strong>Description:</strong> {{ lesson.description }}</p>
-    <p><strong>Class:</strong> {{ lesson.student_class.name }}</p>
+
+
+    <p><strong>Class/Group:</strong>
+        {% if lesson.school_class %}
+            {{ lesson.school_class.name }}
+        {% elif lesson.study_group %}
+            {{ lesson.study_group.name }}
+        {% else %}
+            —
+        {% endif %}
+    </p>
 
     <hr>
 
-    <h3>Students in class</h3>
+    <h3>Students in this context</h3>
     <ul class="list-group">
         {% for student in students %}
             <li class="list-group-item">
-                {{ student.first_name }} {{ student.last_name }}
+                {{ student.user.first_name }} {{ student.user.last_name }}
             </li>
         {% empty %}
-            <li class="list-group-item">No students in this class.</li>
+            <li class="list-group-item">No students assigned to this context.</li>
         {% endfor %}
     </ul>
 
@@ -32,7 +43,7 @@
     <ul class="list-group">
         {% for grade in grades %}
             <li class="list-group-item">
-                {{ grade.student.first_name }} {{ grade.student.last_name }}: {{ grade.score }}
+                {{ grade.student.user.first_name }} {{ grade.student.user.last_name }}: {{ grade.score }}
             </li>
         {% empty %}
             <li class="list-group-item">No grades assigned yet.</li>
@@ -41,8 +52,8 @@
 
     <hr>
 
-
     <a href="{% url 'teacher:set_grade' lesson.id %}" class="btn btn-primary mt-3">Set Grade</a>
+    <a href="{% url 'teacher:teacher_dashboard' %}" class="btn btn-secondary mt-3">← Back to Dashboard</a>
 </div>
 
 </body>

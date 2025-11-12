@@ -34,6 +34,27 @@ class Student(models.Model):
         return self.user.username
 
 
+class StudyGroup(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+    created_by = models.ForeignKey(
+        UserProfile,
+        on_delete=models.SET_NULL,
+        null=True,
+        limit_choices_to={'is_teacher': True},
+        related_name='created_groups'
+    )
+    students = models.ManyToManyField(
+        Student,
+        related_name='study_groups',
+        blank=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Lesson(models.Model):
     title = models.CharField(max_length=100)
     subject = models.CharField(max_length=100)
@@ -47,13 +68,26 @@ class Lesson(models.Model):
     school_class = models.ForeignKey(
         SchoolClass,
         on_delete=models.CASCADE,
-        related_name='lessons'
+        related_name='lessons',
+        null=True,
+        blank=True
+    )
+    study_group = models.ForeignKey(
+        StudyGroup,
+        on_delete=models.CASCADE,
+        related_name='lessons',
+        null=True,
+        blank=True
     )
     homework = models.TextField(blank=True)
     room = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return f"{self.subject} ({self.school_class})"
+        if self.school_class:
+            return f"{self.subject} ({self.school_class})"
+        elif self.study_group:
+            return f"{self.subject} [{self.study_group}]"
+        return self.subject
 
 
 class Grade(models.Model):
@@ -65,8 +99,16 @@ class Grade(models.Model):
     def __str__(self):
         return f"{self.student} — {self.lesson}: {self.score}"
 
+    @property
+    def group_context(self):
+        if self.lesson.study_group:
+            return f"Group: {self.lesson.study_group.name}"
+        elif self.lesson.school_class:
+            return f"Class: {self.lesson.school_class.name}"
+        return "No group"
 
-# ---- СИГНАЛЫ ----
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

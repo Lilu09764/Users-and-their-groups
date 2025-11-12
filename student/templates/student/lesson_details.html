@@ -1,11 +1,19 @@
-<h2>{{ lesson.name }}</h2>
+<!-- student/templates/student/lesson_details.html -->
+<h2>{{ lesson.title }}</h2>
+<p><strong>Subject:</strong> {{ lesson.subject }}</p>
 <p><strong>Date:</strong> {{ lesson.date|date:"d.m.Y" }}</p>
 <p><strong>Description:</strong> {{ lesson.description }}</p>
 <p><strong>Homework:</strong> {{ lesson.homework }}</p>
 <p><strong>Room:</strong> {{ lesson.room }}</p>
 
+{% if lesson.school_class %}
+  <p><strong>Class:</strong> {{ lesson.school_class.name }}</p>
+{% elif lesson.study_group %}
+  <p><strong>Group:</strong> {{ lesson.study_group.name }}</p>
+{% endif %}
+
 {% if grade %}
-  <p><strong>Your Grade:</strong> {{ grade.grade }}</p>
+  <p><strong>Your Grade:</strong> {{ grade.score }}</p>
 {% else %}
   <p>Grade has not been assigned yet.</p>
 {% endif %}
